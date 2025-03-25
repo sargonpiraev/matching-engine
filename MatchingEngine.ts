@@ -43,7 +43,7 @@ export class MatchingEngine {
   private match() {
     const asks = this.getSideOrders(OrderSide.ASK);
     const bids = this.getSideOrders(OrderSide.BID);
-    if (!asks.length || bids.length) return;
+    if (!asks.length || !bids.length) return;
     const [minPriceAskOrder] = asks.sort(sortByPriceMinToMax);
     const [maxPriceBidOrder] = bids.sort(sortByPriceMaxToMin);
     if (minPriceAskOrder.price > maxPriceBidOrder.price) return;
