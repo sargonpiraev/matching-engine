@@ -23,7 +23,7 @@ const sortByPriceMinToMax = (a: Order, b: Order) => a.price - b.price;
 // no performance optimisations
 // only limit orders
 // only full execution
-// max price wins
+// trade gets bid price
 export class MatchingEngine {
   public orders: Order[] = [];
 
@@ -49,7 +49,7 @@ export class MatchingEngine {
     if (minPriceAskOrder.price > maxPriceBidOrder.price) return;
     const askOrderId = minPriceAskOrder.id;
     const bidOrderId = maxPriceBidOrder.id;
-    const tradePrice = Math.max(minPriceAskOrder.price, maxPriceBidOrder.price);
+    const tradePrice = maxPriceBidOrder.price;
     const trade: Trade = { askOrderId, bidOrderId, price: tradePrice };
     this.deleteOrder(minPriceAskOrder.id);
     this.deleteOrder(maxPriceBidOrder.id);
