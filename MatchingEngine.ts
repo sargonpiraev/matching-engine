@@ -27,34 +27,32 @@ const sortByPriceMinToMax = (a: Order, b: Order) => a.price - b.price;
 export class MatchingEngine {
   public orders: Order[] = [];
 
-  get bids() {
-    return this.orders.filter(order => order.side === OrderSide.BID);
-  }
-
-  get asks() {
-    return this.orders.filter((order) => order.side === OrderSide.ASK);
-  }
-
-  createOrder(order: Order) {
+  public createOrder(order: Order) {
     this.orders.push(order);
     this.match();
   }
 
-  deleteOrder(order: Order) {
-    this.orders = this.orders.filter(x => x.id !== order.id);
+  private getSideOrders(side: OrderSide): Order[] {
+    return this.orders.filter(order => order.side === side);
   }
 
-  match() {
-    if (!this.asks.length || !this.bids.length) return;
-    const minPriceAskOrder = this.asks.sort(sortByPriceMinToMax)[0];
-    const maxPriceBidOrder = this.bids.sort(sortByPriceMaxToMin)[0];
+  private deleteOrder(orderId: Order['id']) {
+    this.orders = this.orders.filter(x => x.id !== orderId);
+  }
+
+  private match() {
+    const asks = this.getSideOrders(OrderSide.ASK);
+    const bids = this.getSideOrders(OrderSide.BID);
+    if (!asks.length || bids.length) return;
+    const [minPriceAskOrder] = asks.sort(sortByPriceMinToMax);
+    const [maxPriceBidOrder] = bids.sort(sortByPriceMaxToMin);
     if (minPriceAskOrder.price > maxPriceBidOrder.price) return;
     const askOrderId = minPriceAskOrder.id;
     const bidOrderId = maxPriceBidOrder.id;
     const tradePrice = Math.max(minPriceAskOrder.price, maxPriceBidOrder.price);
     const trade: Trade = { askOrderId, bidOrderId, price: tradePrice };
-    this.deleteOrder(minPriceAskOrder);
-    this.deleteOrder(maxPriceBidOrder);
+    this.deleteOrder(minPriceAskOrder.id);
+    this.deleteOrder(maxPriceBidOrder.id);
     console.log(trade);
   }
 }
