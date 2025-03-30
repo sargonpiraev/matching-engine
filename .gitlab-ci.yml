@@ -64,7 +64,7 @@ dependabot:
     - npm install
     - git config --global user.name "GitLab CI"
     - git config --global user.email "gitlab-ci@example.com"
-    - git remote add gitlab_origin https://oauth2:$GITLAB_API_TOKEN@gitlab.com/$CI_PROJECT_PATH.git
+    - git remote set-url gitlab_origin https://project_68367382_bot_c6b0ace15a0512739b467ed76a499bc3:$GITLAB_API_TOKEN@gitlab.com/$CI_PROJECT_PATH.git
     - git checkout -b "update-deps-$(date +%Y%m%d)"
     - git add package.json package-lock.json
     - git commit -m "automatic dependency update"
