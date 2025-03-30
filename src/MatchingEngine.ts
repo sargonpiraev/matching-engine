@@ -1,43 +1,57 @@
 import { Order, OrderSide, Trade } from './types'
 
-const sortByPriceMaxToMin = (a: Order, b: Order) => b.price - a.price
-const sortByPriceMinToMax = (a: Order, b: Order) => a.price - b.price
-
 // one trading instrument
 // no performance optimisations
 // only limit orders
-// only full execution
 // trade gets bid price
 export class MatchingEngine {
-  public orders: Order[] = []
+  private orders: Order[] = []
 
-  public createOrder(order: Order): Trade | undefined {
+  public addOrder(order: Order): Trade[] {
     this.orders.push(order)
     return this.match()
   }
 
-  private getSideOrders(side: OrderSide): Order[] {
-    return this.orders.filter((order) => order.side === side)
+  public get bids() {
+    return this.orders
+      .filter((order) => order.side === OrderSide.BID)
+      .sort((a: Order, b: Order) => b.price - a.price)
   }
 
-  public deleteOrder(orderId: Order['id']) {
+  public get asks() {
+    return this.orders
+      .filter((order) => order.side === OrderSide.ASK)
+      .sort((a: Order, b: Order) => a.price - b.price)
+  }
+
+  private deleteOrder(orderId: Order['id']) {
     this.orders = this.orders.filter((x) => x.id !== orderId)
   }
 
-  private match(): Trade | undefined {
-    const asks = this.getSideOrders(OrderSide.ASK)
-    const bids = this.getSideOrders(OrderSide.BID)
-    if (!asks.length || !bids.length) return
-    const [minPriceAskOrder] = asks.sort(sortByPriceMinToMax)
-    const [maxPriceBidOrder] = bids.sort(sortByPriceMaxToMin)
-    if (minPriceAskOrder.price > maxPriceBidOrder.price) return
-    const askOrderId = minPriceAskOrder.id
-    const bidOrderId = maxPriceBidOrder.id
-    const tradePrice = maxPriceBidOrder.price
-    const trade: Trade = { askOrderId, bidOrderId, price: tradePrice }
-    this.deleteOrder(minPriceAskOrder.id)
-    this.deleteOrder(maxPriceBidOrder.id)
-    console.log(trade)
-    return trade
+  private reduceOrderQuantity(order: Order, quantity: number) {
+    order.quantity -= quantity
+    if (order.quantity > 0) return
+    this.deleteOrder(order.id)
+  }
+
+  private match(): Trade[] {
+    if (!this.asks.length || !this.bids.length) return []
+
+    const [minPriceAskOrder] = this.asks
+    const [maxPriceBidOrder] = this.bids
+
+    if (minPriceAskOrder.price > maxPriceBidOrder.price) return []
+
+    const trade: Trade = {
+      askOrderId: minPriceAskOrder.id,
+      bidOrderId: maxPriceBidOrder.id,
+      price: maxPriceBidOrder.price,
+      quantity: Math.min(minPriceAskOrder.quantity, maxPriceBidOrder.quantity),
+    }
+
+    this.reduceOrderQuantity(minPriceAskOrder, trade.quantity)
+    this.reduceOrderQuantity(maxPriceBidOrder, trade.quantity)
+
+    return [trade, ...this.match()]
   }
 }
