@@ -1,23 +1,21 @@
-import test, {  } from 'node:test';
-import assert from 'node:assert';
-import {MatchingEngine, Order, OrderSide} from "./MatchingEngine";
-import {randomUUID} from "node:crypto";
+import assert from 'node:assert'
+import { MatchingEngine } from './MatchingEngine'
+import { randomUUID } from 'node:crypto'
+import { Order, OrderSide } from './types'
 
-test.describe('MarchingEngine Tests', () => {
-
-  test.test('#createOrder', () => {
+describe('MarchingEngine Tests', () => {
+  test('#createOrder', () => {
     //assign
-    const matchingEngine = new MatchingEngine();
-    const order: Order = {id: randomUUID(), side: OrderSide.BID, price: 1};
+    const matchingEngine = new MatchingEngine()
+    const order: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
     // act
-    matchingEngine.createOrder(order);
+    matchingEngine.createOrder(order)
     // assert
-    assert.strictEqual(matchingEngine.orders.length, 1);
-  });
+    assert.strictEqual(matchingEngine.orders.length, 1)
+  })
 
-  test.describe('#match', () => {
-
-    test.test(`
+  describe('#match', () => {
+    test(`
       given
         there are no orders and
       when
@@ -27,17 +25,16 @@ test.describe('MarchingEngine Tests', () => {
         order should be added to orders
     `, () => {
       //assign
-      const matchingEngine = new MatchingEngine();
-      const order: Order = {id: randomUUID(), side: OrderSide.BID, price: 1};
+      const matchingEngine = new MatchingEngine()
+      const order: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
       // act
-      const result = matchingEngine.createOrder(order);
+      const result = matchingEngine.createOrder(order)
       // assert
-      assert.strictEqual(result, undefined);
-      assert.strictEqual(matchingEngine.orders.length, 1);
-    });
+      assert.strictEqual(result, undefined)
+      assert.strictEqual(matchingEngine.orders.length, 1)
+    })
 
-
-    test.test(`
+    test(`
       given
         there is one bid order
       when
@@ -47,18 +44,18 @@ test.describe('MarchingEngine Tests', () => {
         order should be added to bids
     `, () => {
       //assign
-      const matchingEngine = new MatchingEngine();
-      const order1: Order = {id: randomUUID(), side: OrderSide.BID, price: 1};
-      const order2: Order = {id: randomUUID(), side: OrderSide.BID, price: 1};
-      matchingEngine.createOrder(order1);
+      const matchingEngine = new MatchingEngine()
+      const order1: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
+      const order2: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
+      matchingEngine.createOrder(order1)
       // act
-      const result = matchingEngine.createOrder(order2);
+      const result = matchingEngine.createOrder(order2)
       // assert
-      assert.strictEqual(result, undefined);
-      assert.strictEqual(matchingEngine.orders.length, 2);
-    });
+      assert.strictEqual(result, undefined)
+      assert.strictEqual(matchingEngine.orders.length, 2)
+    })
 
-    test.test(`
+    test(`
       given
         there is one ask order
       when
@@ -68,18 +65,18 @@ test.describe('MarchingEngine Tests', () => {
         order should be added to asks
     `, () => {
       //assign
-      const matchingEngine = new MatchingEngine();
-      const order1: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1};
-      const order2: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1};
-      matchingEngine.createOrder(order1);
+      const matchingEngine = new MatchingEngine()
+      const order1: Order = { id: randomUUID(), side: OrderSide.ASK, price: 1 }
+      const order2: Order = { id: randomUUID(), side: OrderSide.ASK, price: 1 }
+      matchingEngine.createOrder(order1)
       // act
-      const result = matchingEngine.createOrder(order2);
+      const result = matchingEngine.createOrder(order2)
       // assert
-      assert.strictEqual(result, undefined);
-      assert.strictEqual(matchingEngine.orders.length, 2);
-    });
+      assert.strictEqual(result, undefined)
+      assert.strictEqual(matchingEngine.orders.length, 2)
+    })
 
-    test.test(`
+    test(`
       given
         there is one bid order
       when
@@ -90,18 +87,18 @@ test.describe('MarchingEngine Tests', () => {
         new ask order should be added to orders
     `, () => {
       //assign
-      const matchingEngine = new MatchingEngine();
-      const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1};
-      const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 2};
-      matchingEngine.createOrder(bidOrder);
+      const matchingEngine = new MatchingEngine()
+      const bidOrder: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
+      const askOrder: Order = { id: randomUUID(), side: OrderSide.ASK, price: 2 }
+      matchingEngine.createOrder(bidOrder)
       // act
-      const result = matchingEngine.createOrder(askOrder);
+      const result = matchingEngine.createOrder(askOrder)
       // assert
-      assert.strictEqual(result, undefined);
-      assert.strictEqual(matchingEngine.orders.length, 2);
-    });
+      assert.strictEqual(result, undefined)
+      assert.strictEqual(matchingEngine.orders.length, 2)
+    })
 
-    test.test(`
+    test(`
       given
         there is one bid order
       when
@@ -112,19 +109,19 @@ test.describe('MarchingEngine Tests', () => {
         no orders should be in orders in the end
     `, () => {
       //assign
-      const matchingEngine = new MatchingEngine();
-      const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1};
-      const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1};
-      matchingEngine.createOrder(bidOrder);
+      const matchingEngine = new MatchingEngine()
+      const bidOrder: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
+      const askOrder: Order = { id: randomUUID(), side: OrderSide.ASK, price: 1 }
+      matchingEngine.createOrder(bidOrder)
       // act
-      const result = matchingEngine.createOrder(askOrder);
+      const result = matchingEngine.createOrder(askOrder)
       // assert
       const trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1 }
-      assert.deepEqual(result, trade);
-      assert.strictEqual(matchingEngine.orders.length, 0);
-    });
+      assert.deepEqual(result, trade)
+      assert.strictEqual(matchingEngine.orders.length, 0)
+    })
 
-    test.test(`
+    test(`
       given
         there is one bid order
       when
@@ -136,18 +133,16 @@ test.describe('MarchingEngine Tests', () => {
         no orders should be in orders in the end
     `, () => {
       //assign
-      const matchingEngine = new MatchingEngine();
-      const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 2};
-      const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1};
-      matchingEngine.createOrder(bidOrder);
+      const matchingEngine = new MatchingEngine()
+      const bidOrder: Order = { id: randomUUID(), side: OrderSide.BID, price: 2 }
+      const askOrder: Order = { id: randomUUID(), side: OrderSide.ASK, price: 1 }
+      matchingEngine.createOrder(bidOrder)
       // act
-      const result = matchingEngine.createOrder(askOrder);
+      const result = matchingEngine.createOrder(askOrder)
       // assert
       const trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: bidOrder.price }
-      assert.deepEqual(result, trade);
-      assert.strictEqual(matchingEngine.orders.length, 0);
-    });
-
-  });
-
-});
+      assert.deepEqual(result, trade)
+      assert.strictEqual(matchingEngine.orders.length, 0)
+    })
+  })
+})

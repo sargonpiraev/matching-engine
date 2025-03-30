@@ -12,8 +12,6 @@ cache:
   policy: pull
   paths: [ .npm ]
 
-
-# Установка зависимостей
 install:
   stage: install
   script:
@@ -23,31 +21,24 @@ install:
   cache:
     policy: pull-push
 
-# Основные тесты
 test_unit:
   stage: test
   script:
     - npm run test:unit
+  coverage: /All files[^|]*|[^|]*\s+([\d\.]+)/
   artifacts:
     paths: [ coverage ]
     expire_in: 1 week
-#    reports:
-#      coverage_report:
-#        coverage_format: cobertura
-#        path: coverage/cobertura-coverage.xml
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
 
+test_codestyles:
+  stage: test
+  script:
+    - npm run test:codestyles"
 
-## Проверка стиля кода (Prettier)
-#test_codestyle:
-#  stage: verification
-#  script:
-#    - npx prettier --check "src/**/*.{js,ts,jsx,tsx,json,css,md}"  # Проверка без изменений
-#  cache:
-#    policy: pull
-#    paths:
-#      - ~/.npm
-
-# Проверка сборки
 test_build:
   stage: test
   script:
@@ -56,7 +47,6 @@ test_build:
     paths: [ dist ]
     expire_in: 1 week
 
-# Проверка типов TypeScript
 test_type:
   stage: test
   script:
