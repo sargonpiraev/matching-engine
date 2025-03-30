@@ -55,6 +55,7 @@ cache:
 
 dependabot:
   stage: dependabot
+  image: node:latest
 #  rules:
 #    - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
