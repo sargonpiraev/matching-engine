@@ -3,6 +3,7 @@ image: node:22-alpine
 stages:
   - install
   - test
+  - dependabot
 
 variables:
   NODE_OPTIONS: "--max-old-space-size=4096"  # 4GB RAM limit
@@ -51,3 +52,26 @@ test_type:
   stage: test
   script:
     - npm run test:type
+
+dependabot:
+  stage: dependabot
+  image: node:latest
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+  script:
+    - npm install -g npm-check-updates
+    - ncu -u
+    - npm install
+    - git config --global user.name "GitLab CI"
+    - git config --global user.email "gitlab-ci@example.com"
+    - git checkout -b "update-deps-$(date +%Y%m%d)"
+    - git add package.json package-lock.json
+    - git commit -m "chore(deps): automatic dependency update"
+    - git push origin "update-deps-$(date +%Y%m%d)" --force
+    - 'curl --request POST
+         --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN"
+         --form "title=automatic dependency update $(date +%Y-%m-%d)"
+         --form "description=automatic dependency update"
+         --form "source_branch=update-deps-$(date +%Y%m%d)"
+         --form "target_branch=main"
+         "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/merge_requests"'
