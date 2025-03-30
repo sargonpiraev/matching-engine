@@ -143,6 +143,60 @@ describe('MarchingEngine Tests', () => {
       const trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: bidOrder.price }
       assert.deepEqual(result, trade)
       assert.strictEqual(matchingEngine.orders.length, 0)
+    });
+
+    test(`
+      given
+        there are two bid orders and
+        one bid order price is higher
+      when
+        new ask order added and
+        new ask order price greater than highest bid order price
+      then
+        trade should happen and
+        price should be the highest bid order price and
+        bid order with less price should be in orders in the end
+    `, () => {
+      //assign
+      const matchingEngine = new MatchingEngine()
+      const bidOrderLowPrice: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
+      const bidOrderHighPrice: Order = { id: randomUUID(), side: OrderSide.BID, price: 2 }
+      const askOrder: Order = { id: randomUUID(), side: OrderSide.ASK, price: 1 }
+      matchingEngine.createOrder(bidOrderLowPrice)
+      matchingEngine.createOrder(bidOrderHighPrice)
+      // act
+      const result = matchingEngine.createOrder(askOrder)
+      // assert
+      const trade = { bidOrderId: bidOrderHighPrice.id, askOrderId: askOrder.id, price: bidOrderHighPrice.price }
+      assert.deepEqual(result, trade)
+      assert.strictEqual(matchingEngine.orders.length, 1);
+    });
+
+    test(`
+      given
+        there are two ask orders and
+        one ask order price is higher
+      when
+        new bid order added and
+        new bid order price less than highest ask order price
+      then
+        trade should happen and
+        price should be the bid order price and
+        ask order with highest price should be in orders in the end
+    `, () => {
+      //assign
+      const matchingEngine = new MatchingEngine()
+      const askOrderLowestPrice: Order = { id: randomUUID(), side: OrderSide.ASK, price: 1 }
+      const askOrderBigestPrice: Order = { id: randomUUID(), side: OrderSide.ASK, price: 2 }
+      const bidOrder: Order = { id: randomUUID(), side: OrderSide.BID, price: 1 }
+      matchingEngine.createOrder(askOrderLowestPrice)
+      matchingEngine.createOrder(askOrderBigestPrice)
+      // act
+      const result = matchingEngine.createOrder(bidOrder)
+      // assert
+      const trade = { bidOrderId: bidOrder.id, askOrderId: askOrderLowestPrice.id, price: bidOrder.price }
+      assert.deepEqual(result, trade)
+      assert.strictEqual(matchingEngine.orders.length, 1);
     })
   })
 })
