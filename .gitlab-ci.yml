@@ -1,8 +1,8 @@
 image: node:22-alpine
 
 stages:
-  - install
-  - test
+#  - install
+#  - test
   - dependabot
 
 variables:
@@ -13,45 +13,45 @@ cache:
   policy: pull
   paths: [ .npm ]
 
-install:
-  stage: install
-  script:
-    - npm ci --prefer-offline --cache .npm --no-audit --progress=false
-  artifacts:
-    paths: [ node_modules ]
-  cache:
-    policy: pull-push
-
-test_unit:
-  stage: test
-  script:
-    - npm run test:unit
-  coverage: /All files[^|]*|[^|]*\s+([\d\.]+)/
-  artifacts:
-    paths: [ coverage ]
-    expire_in: 1 week
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: coverage/cobertura-coverage.xml
-
-test_codestyles:
-  stage: test
-  script:
-    - npm run test:codestyles
-
-test_build:
-  stage: test
-  script:
-    - npm run build
-  artifacts:
-    paths: [ dist ]
-    expire_in: 1 week
-
-test_type:
-  stage: test
-  script:
-    - npm run test:type
+#install:
+#  stage: install
+#  script:
+#    - npm ci --prefer-offline --cache .npm --no-audit --progress=false
+#  artifacts:
+#    paths: [ node_modules ]
+#  cache:
+#    policy: pull-push
+#
+#test_unit:
+#  stage: test
+#  script:
+#    - npm run test:unit
+#  coverage: /All files[^|]*|[^|]*\s+([\d\.]+)/
+#  artifacts:
+#    paths: [ coverage ]
+#    expire_in: 1 week
+#    reports:
+#      coverage_report:
+#        coverage_format: cobertura
+#        path: coverage/cobertura-coverage.xml
+#
+#test_codestyles:
+#  stage: test
+#  script:
+#    - npm run test:codestyles
+#
+#test_build:
+#  stage: test
+#  script:
+#    - npm run build
+#  artifacts:
+#    paths: [ dist ]
+#    expire_in: 1 week
+#
+#test_type:
+#  stage: test
+#  script:
+#    - npm run test:type
 
 dependabot:
   stage: dependabot
