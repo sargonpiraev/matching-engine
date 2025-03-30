@@ -7,10 +7,12 @@ export type Order = {
   id: string
   side: OrderSide
   price: number
+  quantity: number
 }
 
 export type Trade = {
   askOrderId: string
   bidOrderId: string
   price: number
+  quantity: number
 }
