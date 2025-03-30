@@ -143,7 +143,7 @@ describe('MarchingEngine Tests', () => {
       const trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: bidOrder.price }
       assert.deepEqual(result, trade)
       assert.strictEqual(matchingEngine.orders.length, 0)
-    });
+    })
 
     test(`
       given
@@ -167,10 +167,14 @@ describe('MarchingEngine Tests', () => {
       // act
       const result = matchingEngine.createOrder(askOrder)
       // assert
-      const trade = { bidOrderId: bidOrderHighPrice.id, askOrderId: askOrder.id, price: bidOrderHighPrice.price }
+      const trade = {
+        bidOrderId: bidOrderHighPrice.id,
+        askOrderId: askOrder.id,
+        price: bidOrderHighPrice.price,
+      }
       assert.deepEqual(result, trade)
-      assert.strictEqual(matchingEngine.orders.length, 1);
-    });
+      assert.strictEqual(matchingEngine.orders.length, 1)
+    })
 
     test(`
       given
@@ -194,9 +198,13 @@ describe('MarchingEngine Tests', () => {
       // act
       const result = matchingEngine.createOrder(bidOrder)
       // assert
-      const trade = { bidOrderId: bidOrder.id, askOrderId: askOrderLowestPrice.id, price: bidOrder.price }
+      const trade = {
+        bidOrderId: bidOrder.id,
+        askOrderId: askOrderLowestPrice.id,
+        price: bidOrder.price,
+      }
       assert.deepEqual(result, trade)
-      assert.strictEqual(matchingEngine.orders.length, 1);
+      assert.strictEqual(matchingEngine.orders.length, 1)
     })
   })
 })
