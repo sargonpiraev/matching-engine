@@ -68,10 +68,10 @@ dependabot:
     - git add package.json package-lock.json
     - git commit -m "chore(deps): automatic dependency update"
     - git push origin "update-deps-$(date +%Y%m%d)" --force
-    - 'curl --request POST
-         --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN"
-         --form "title=automatic dependency update $(date +%Y-%m-%d)"
-         --form "description=automatic dependency update"
-         --form "source_branch=update-deps-$(date +%Y%m%d)"
-         --form "target_branch=main"
-         "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/merge_requests"'
+    - >-
+      curl --request POST --header "PRIVATE-TOKEN: $GITLAB_API_TOKEN"
+      --form "title=automatic dependency update $(date +%Y-%m-%d)"
+      --form "description=automatic dependency update"
+      --form "source_branch=update-deps-$(date +%Y%m%d)"
+      --form "target_branch=main"
+      "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/merge_requests"
