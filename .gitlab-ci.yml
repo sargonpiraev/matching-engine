@@ -1,0 +1,63 @@
+image: node:22-alpine
+
+stages:
+  - install
+  - test
+
+variables:
+  NODE_OPTIONS: "--max-old-space-size=4096"  # 4GB RAM limit
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  policy: pull
+  paths: [ .npm ]
+
+
+# Установка зависимостей
+install:
+  stage: install
+  script:
+    - npm ci --prefer-offline --cache .npm --no-audit --progress=false
+  artifacts:
+    paths: [ node_modules ]
+  cache:
+    policy: pull-push
+
+# Основные тесты
+test_unit:
+  stage: test
+  script:
+    - npm run test:unit
+  artifacts:
+    paths: [ coverage ]
+    expire_in: 1 week
+#    reports:
+#      coverage_report:
+#        coverage_format: cobertura
+#        path: coverage/cobertura-coverage.xml
+
+
+## Проверка стиля кода (Prettier)
+#test_codestyle:
+#  stage: verification
+#  script:
+#    - npx prettier --check "src/**/*.{js,ts,jsx,tsx,json,css,md}"  # Проверка без изменений
+#  cache:
+#    policy: pull
+#    paths:
+#      - ~/.npm
+
+# Проверка сборки
+test_build:
+  stage: test
+  script:
+    - npm run build
+  artifacts:
+    paths: [ dist ]
+    expire_in: 1 week
+
+# Проверка типов TypeScript
+test_type:
+  stage: test
+  script:
+    - npm run test:type

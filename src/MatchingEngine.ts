@@ -1,7 +1,8 @@
+
 export enum OrderSide {
   ASK, // sell
   BID, // buy
-};
+}
 
 export type Order = {
   id: string;
@@ -27,20 +28,20 @@ const sortByPriceMinToMax = (a: Order, b: Order) => a.price - b.price;
 export class MatchingEngine {
   public orders: Order[] = [];
 
-  public createOrder(order: Order) {
+  public createOrder(order: Order): Trade | undefined {
     this.orders.push(order);
-    this.match();
+    return this.match();
   }
 
   private getSideOrders(side: OrderSide): Order[] {
     return this.orders.filter(order => order.side === side);
   }
 
-  private deleteOrder(orderId: Order['id']) {
+  public deleteOrder(orderId: Order['id']) {
     this.orders = this.orders.filter(x => x.id !== orderId);
   }
 
-  private match() {
+  private match(): Trade | undefined {
     const asks = this.getSideOrders(OrderSide.ASK);
     const bids = this.getSideOrders(OrderSide.BID);
     if (!asks.length || !bids.length) return;
@@ -54,5 +55,8 @@ export class MatchingEngine {
     this.deleteOrder(minPriceAskOrder.id);
     this.deleteOrder(maxPriceBidOrder.id);
     console.log(trade);
+    return trade;
   }
 }
+
+
