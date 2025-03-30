@@ -38,7 +38,7 @@ test_unit:
 test_codestyles:
   stage: test
   script:
-    - npm run test:codestyles"
+    - npm run test:codestyles
 
 test_build:
   stage: test
