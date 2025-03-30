@@ -55,8 +55,8 @@ cache:
 
 dependabot:
   stage: dependabot
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
+#  rules:
+#    - if: $CI_PIPELINE_SOURCE == "schedule"
   script:
     - npm install -g npm-check-updates
     - ncu -u
