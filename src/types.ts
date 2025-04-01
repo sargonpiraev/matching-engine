@@ -8,7 +8,7 @@ export type Order = {
   side: OrderSide
   price: number
   quantity: number
-  time: number;
+  time: number
 }
 
 export type Trade = {

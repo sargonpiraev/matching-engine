@@ -1,4 +1,4 @@
-import {Order, OrderSide, Trade} from './types'
+import { Order, OrderSide, Trade } from './types'
 
 // one trading instrument
 // no performance optimisations
@@ -8,8 +8,8 @@ export class MatchingEngine {
   private orders: Order[] = []
 
   public addOrder(order: Order & { createdAt?: Date }): Trade[] {
-    this.orders.push({ time: new Date().getTime(), ...order });
-    return this.match();
+    this.orders.push({ time: new Date().getTime(), ...order })
+    return this.match()
   }
 
   public get bids() {
@@ -17,7 +17,7 @@ export class MatchingEngine {
       .filter((order) => order.side === OrderSide.BID)
       .sort((a: Order, b: Order) => {
         if (a.price === b.price) return a.time - b.time
-        return b.price - a.price;
+        return b.price - a.price
       })
   }
 
@@ -25,8 +25,8 @@ export class MatchingEngine {
     return this.orders
       .filter((order) => order.side === OrderSide.ASK)
       .sort((a: Order, b: Order) => {
-        if (a.price === b.price) return a.time - b.time;
-        return a.price - b.price;
+        if (a.price === b.price) return a.time - b.time
+        return a.price - b.price
       })
   }
 

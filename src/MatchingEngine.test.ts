@@ -1,10 +1,9 @@
 import assert from 'node:assert'
-import {MatchingEngine} from './MatchingEngine'
-import {randomUUID} from 'node:crypto'
-import {Order, OrderSide, Trade} from './types'
+import { MatchingEngine } from './MatchingEngine'
+import { randomUUID } from 'node:crypto'
+import { Order, OrderSide, Trade } from './types'
 
 describe('MarchingEngine Tests', () => {
-
   test(`
     given
       there are no orders
@@ -16,7 +15,7 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const order: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
+    const order: Order = { id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1 }
     // act
     const result = matchingEngine.addOrder(order)
     // assert
@@ -35,8 +34,20 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder1: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
-    const bidOrder2: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
+    const bidOrder1: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
+    const bidOrder2: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder1)
     // act
     const result = matchingEngine.addOrder(bidOrder2)
@@ -56,8 +67,20 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const askOrder1: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 1, time: 1}
-    const askOrder2: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 1, time: 1}
+    const askOrder1: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
+    const askOrder2: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(askOrder1)
     // act
     const result = matchingEngine.addOrder(askOrder2)
@@ -78,8 +101,20 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 2, quantity: 1, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 2,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder)
     // act
     const result = matchingEngine.addOrder(askOrder)
@@ -102,13 +137,25 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 1, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder)
     // act
     const result = matchingEngine.addOrder(askOrder)
     // assert
-    const trade: Trade = {bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 1}
+    const trade: Trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 1 }
     assert.deepEqual(result, [trade])
     assert.strictEqual(matchingEngine.bids.length, 0)
     assert.strictEqual(matchingEngine.asks.length, 0)
@@ -127,8 +174,20 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 2, quantity: 1, time: 1}
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 1, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 2,
+      quantity: 1,
+      time: 1,
+    }
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder)
     // act
     const result = matchingEngine.addOrder(askOrder)
@@ -163,16 +222,22 @@ describe('MarchingEngine Tests', () => {
       side: OrderSide.BID,
       price: 1,
       quantity: 1,
-      time: 1
+      time: 1,
     }
     const bidOrderMaxPrice: Order = {
       id: randomUUID(),
       side: OrderSide.BID,
       price: 2,
       quantity: 1,
-      time: 1
+      time: 1,
     }
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 1, time: 1}
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrderMinPrice)
     matchingEngine.addOrder(bidOrderMaxPrice)
     // act
@@ -210,18 +275,24 @@ describe('MarchingEngine Tests', () => {
       side: OrderSide.BID,
       price: 1,
       quantity: 1,
-      time: 1
+      time: 1,
     }
     const bidOrderRecent: Order = {
       id: randomUUID(),
       side: OrderSide.BID,
       price: 1,
       quantity: 1,
-      time: 2
+      time: 2,
     }
     matchingEngine.addOrder(bidOrderOldest)
     matchingEngine.addOrder(bidOrderRecent)
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 1, time: 1}
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     // act
     const result = matchingEngine.addOrder(askOrder)
     // assert
@@ -255,16 +326,22 @@ describe('MarchingEngine Tests', () => {
       side: OrderSide.ASK,
       price: 1,
       quantity: 1,
-      time: 1
+      time: 1,
     }
     const askOrderBigestPrice: Order = {
       id: randomUUID(),
       side: OrderSide.ASK,
       price: 2,
       quantity: 1,
-      time: 1
+      time: 1,
     }
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     matchingEngine.addOrder(askOrderLowestPrice)
     matchingEngine.addOrder(askOrderBigestPrice)
     // act
@@ -302,18 +379,24 @@ describe('MarchingEngine Tests', () => {
       side: OrderSide.ASK,
       price: 1,
       quantity: 1,
-      time: 1
+      time: 1,
     }
     const askOrderRecent: Order = {
       id: randomUUID(),
       side: OrderSide.ASK,
       price: 1,
       quantity: 1,
-      time: 2
+      time: 2,
     }
     matchingEngine.addOrder(askOrderOldest)
     matchingEngine.addOrder(askOrderRecent)
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 1, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+    }
     // act
     const result = matchingEngine.addOrder(bidOrder)
     // assert
@@ -340,13 +423,25 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 10, time: 1}
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 5, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 10,
+      time: 1,
+    }
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 5,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder)
     // act
     const result = matchingEngine.addOrder(askOrder)
     // assert
-    const trade: Trade = {bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 5}
+    const trade: Trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 5 }
     assert.deepEqual(result, [trade])
     assert.strictEqual(matchingEngine.bids.length, 1)
     assert.strictEqual(matchingEngine.asks.length, 0)
@@ -365,13 +460,25 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 10, time: 1}
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 5, time: 1}
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 10,
+      time: 1,
+    }
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 5,
+      time: 1,
+    }
     matchingEngine.addOrder(askOrder)
     // act
     const result = matchingEngine.addOrder(bidOrder)
     // assert
-    const trade: Trade = {bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 5}
+    const trade: Trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 5 }
     assert.deepEqual(result, [trade])
     assert.strictEqual(matchingEngine.asks.length, 1)
     assert.strictEqual(matchingEngine.bids.length, 0)
@@ -390,13 +497,25 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 5, time: 1}
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 10, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 5,
+      time: 1,
+    }
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 10,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder)
     // act
     const result = matchingEngine.addOrder(askOrder)
     // assert
-    const trade: Trade = {bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 5}
+    const trade: Trade = { bidOrderId: bidOrder.id, askOrderId: askOrder.id, price: 1, quantity: 5 }
     assert.deepEqual(result, [trade])
     assert.strictEqual(matchingEngine.bids.length, 0)
     assert.strictEqual(matchingEngine.asks.length, 1)
@@ -416,15 +535,27 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const bidOrder1: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 5, time: 1}
+    const bidOrder1: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 5,
+      time: 1,
+    }
     const bidOrder2: Order = {
       id: randomUUID(),
       side: OrderSide.BID,
       price: 1,
       quantity: 10,
-      time: 1
+      time: 1,
     }
-    const askOrder: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 12, time: 1}
+    const askOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 12,
+      time: 1,
+    }
     matchingEngine.addOrder(bidOrder1)
     matchingEngine.addOrder(bidOrder2)
     // act
@@ -460,15 +591,27 @@ describe('MarchingEngine Tests', () => {
   `, () => {
     //assign
     const matchingEngine = new MatchingEngine()
-    const askOrder1: Order = {id: randomUUID(), side: OrderSide.ASK, price: 1, quantity: 5, time: 1}
+    const askOrder1: Order = {
+      id: randomUUID(),
+      side: OrderSide.ASK,
+      price: 1,
+      quantity: 5,
+      time: 1,
+    }
     const askOrder2: Order = {
       id: randomUUID(),
       side: OrderSide.ASK,
       price: 1,
       quantity: 10,
-      time: 1
+      time: 1,
     }
-    const bidOrder: Order = {id: randomUUID(), side: OrderSide.BID, price: 1, quantity: 12, time: 1}
+    const bidOrder: Order = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 12,
+      time: 1,
+    }
     matchingEngine.addOrder(askOrder1)
     matchingEngine.addOrder(askOrder2)
     // act
