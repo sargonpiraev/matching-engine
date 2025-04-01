@@ -1,12 +1,10 @@
 todo:
 - [x] full order filling 
 - [x] partial order filling
-- [ ] price-time algo
-- [ ] fifo algo
-- [ ] pro-rate algo
-- [ ] market orders
-- [ ] cancel order
+- [x] price-time algo
+- [x] market orders
 - [ ] validation
+- [ ] cancel order
 - [ ] performance optimisations
 - [ ] observability
 - [ ] fix protocol support

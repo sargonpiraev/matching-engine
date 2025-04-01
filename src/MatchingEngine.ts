@@ -48,7 +48,7 @@ export class MatchingEngine {
       : this.matchLimitAsk(order)
   }
 
-  private reduceOrderQuantity(order: Order, quantity: number) {
+  private reduceExistingOrderQuantity(order: Order, quantity: number) {
     order.quantity -= quantity
     if (order.quantity > 0) return
     this.deleteOrder(order.id)
@@ -126,8 +126,8 @@ export class MatchingEngine {
     };
   }
 
-  private updateQuantities(order: Order, oppositeOrder: Order, quantity: number) {
+  private updateQuantities(order: Order, existingOrder: Order, quantity: number) {
     order.quantity -= quantity
-    this.reduceOrderQuantity(oppositeOrder, quantity)
+    this.reduceExistingOrderQuantity(existingOrder, quantity)
   }
 }
