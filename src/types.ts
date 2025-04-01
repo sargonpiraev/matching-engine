@@ -3,13 +3,23 @@ export enum OrderSide {
   BID, // buy
 }
 
-export type Order = {
+export type BaseOrder = {
   id: string
   side: OrderSide
-  price: number
   quantity: number
   time: number
 }
+
+export type MarketOrder = BaseOrder & {
+  type: 'market'
+}
+
+export type LimitOrder = BaseOrder & {
+  type: 'limit'
+  price: number
+}
+
+export type Order = LimitOrder | MarketOrder;
 
 export type Trade = {
   askOrderId: string
