@@ -9,3 +9,4 @@ todo:
 - [ ] validation
 - [ ] performance optimisations
 - [ ] observability
+- [ ] fix protocol support
