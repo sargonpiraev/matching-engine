@@ -22,6 +22,9 @@
 
     // Disallow features that require cross-file awareness
     "isolatedModules": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
   },
 
   // Включить все файлы в src

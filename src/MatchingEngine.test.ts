@@ -1,7 +1,8 @@
 import assert from 'node:assert'
 import { MatchingEngine } from './MatchingEngine'
 import { randomUUID } from 'node:crypto'
-import { LimitOrder, OrderSide, Trade, MarketOrder } from './types'
+import { LimitOrder, OrderSide, Trade, MarketOrder, OrderType, Order } from './types'
+import { TradingDisabledError } from './errors'
 
 describe('MarchingEngine Tests', () => {
   test(`
@@ -21,7 +22,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     // act
     const result = matchingEngine.match(order)
@@ -47,7 +48,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrder2: LimitOrder = {
       id: randomUUID(),
@@ -55,7 +56,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder1)
     // act
@@ -82,7 +83,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder2: LimitOrder = {
       id: randomUUID(),
@@ -90,7 +91,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(askOrder1)
     // act
@@ -118,7 +119,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -126,7 +127,7 @@ describe('MarchingEngine Tests', () => {
       price: 2,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder)
     // act
@@ -156,7 +157,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -164,7 +165,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder)
     // act
@@ -195,7 +196,7 @@ describe('MarchingEngine Tests', () => {
       price: 2,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -203,7 +204,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder)
     // act
@@ -240,7 +241,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrderMaxPrice: LimitOrder = {
       id: randomUUID(),
@@ -248,7 +249,7 @@ describe('MarchingEngine Tests', () => {
       price: 2,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -256,7 +257,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrderMinPrice)
     matchingEngine.match(bidOrderMaxPrice)
@@ -296,7 +297,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrderRecent: LimitOrder = {
       id: randomUUID(),
@@ -304,7 +305,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 2,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrderOldest)
     matchingEngine.match(bidOrderRecent)
@@ -314,7 +315,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     // act
     const result = matchingEngine.match(askOrder)
@@ -350,7 +351,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrderBigestPrice: LimitOrder = {
       id: randomUUID(),
@@ -358,7 +359,7 @@ describe('MarchingEngine Tests', () => {
       price: 2,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrder: LimitOrder = {
       id: randomUUID(),
@@ -366,7 +367,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(askOrderLowestPrice)
     matchingEngine.match(askOrderBigestPrice)
@@ -406,7 +407,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrderRecent: LimitOrder = {
       id: randomUUID(),
@@ -414,7 +415,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 2,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(askOrderOldest)
     matchingEngine.match(askOrderRecent)
@@ -424,7 +425,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 1,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     // act
     const result = matchingEngine.match(bidOrder)
@@ -458,7 +459,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 10,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -466,7 +467,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 5,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder)
     // act
@@ -497,7 +498,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 10,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrder: LimitOrder = {
       id: randomUUID(),
@@ -505,7 +506,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 5,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(askOrder)
     // act
@@ -536,7 +537,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 5,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -544,7 +545,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 10,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder)
     // act
@@ -576,7 +577,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 5,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrder2: LimitOrder = {
       id: randomUUID(),
@@ -584,7 +585,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 10,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder: LimitOrder = {
       id: randomUUID(),
@@ -592,7 +593,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 12,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(bidOrder1)
     matchingEngine.match(bidOrder2)
@@ -635,7 +636,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 5,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const askOrder2: LimitOrder = {
       id: randomUUID(),
@@ -643,7 +644,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 10,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const bidOrder: LimitOrder = {
       id: randomUUID(),
@@ -651,7 +652,7 @@ describe('MarchingEngine Tests', () => {
       price: 1,
       quantity: 12,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(askOrder1)
     matchingEngine.match(askOrder2)
@@ -692,14 +693,14 @@ describe('MarchingEngine Tests', () => {
       price: 100,
       quantity: 2,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const marketBidOrder: MarketOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
       quantity: 2,
       time: 2,
-      type: 'market',
+      type: OrderType.MARKET,
     }
     matchingEngine.match(askOrder)
     // act
@@ -732,14 +733,14 @@ describe('MarchingEngine Tests', () => {
       price: 100,
       quantity: 2,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const marketAskOrder: MarketOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
       quantity: 2,
       time: 2,
-      type: 'market',
+      type: OrderType.MARKET,
     }
     matchingEngine.match(bidOrder)
     // act
@@ -771,7 +772,7 @@ describe('MarchingEngine Tests', () => {
       price: 100,
       quantity: 2,
       time: 1,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     const ask2: LimitOrder = {
       id: randomUUID(),
@@ -779,17 +780,17 @@ describe('MarchingEngine Tests', () => {
       price: 101,
       quantity: 3,
       time: 2,
-      type: 'limit',
+      type: OrderType.LIMIT,
     }
     matchingEngine.match(ask1)
     matchingEngine.match(ask2)
-    
+        
     const marketBid: MarketOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
       quantity: 3,
       time: 3,
-      type: 'market',
+      type: OrderType.MARKET,
     }
     // act
     const result = matchingEngine.match(marketBid)
@@ -828,7 +829,7 @@ describe('MarchingEngine Tests', () => {
       side: OrderSide.BID,
       quantity: 1,
       time: 1,
-      type: 'market',
+      type: OrderType.MARKET,
     }
     // act
     const result = matchingEngine.match(marketOrder)
@@ -837,4 +838,129 @@ describe('MarchingEngine Tests', () => {
     assert.strictEqual(matchingEngine.bids.length, 0)
     assert.strictEqual(matchingEngine.asks.length, 0)
   })
+})
+
+describe('MatchingEngine Trading Status Tests', () => {
+  test('should throw error when trading is disabled', () => {
+    const engine = new MatchingEngine()
+    engine.stopTrading()
+    
+    const order: LimitOrder = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+      type: OrderType.LIMIT,
+    }
+
+    assert.throws(
+      () => engine.match(order),
+      TradingDisabledError
+    )
+  })
+
+  test('should allow trading after restart', () => {
+    const engine = new MatchingEngine()
+    engine.stopTrading()
+    engine.startTrading()
+    
+    const order: LimitOrder = {
+      id: randomUUID(),
+      side: OrderSide.BID,
+      price: 1,
+      quantity: 1,
+      time: 1,
+      type: OrderType.LIMIT,
+    }
+
+    assert.doesNotThrow(() => engine.match(order))
+  })
+})
+
+describe('Order Validation Tests', () => {
+  const validOrderBase = {
+    id: randomUUID(),
+    side: OrderSide.BID,
+    quantity: 1,
+    time: Date.now(),
+    type: OrderType.LIMIT,
+    price: 100
+  };
+
+  test('should throw validation error for missing id', () => {
+    const engine = new MatchingEngine();
+    const invalidOrder = {...validOrderBase, id: undefined as any} as Order;
+
+    assert.throws(
+      () => engine.match(invalidOrder),
+      { name: 'OrderValidationError', message: /id must be a UUID/ }
+    );
+  });
+
+  test('should throw validation error for invalid UUID', () => {
+    const engine = new MatchingEngine();
+    const invalidOrder = {...validOrderBase, id: 'invalid-uuid'} as Order;
+
+    assert.throws(
+      () => engine.match(invalidOrder),
+      { name: 'OrderValidationError', message: /id must be a UUID/ }
+    );
+  });
+
+  test('should throw validation error for invalid side', () => {
+    const engine = new MatchingEngine();
+    const invalidOrder = {...validOrderBase, side: 'INVALID_SIDE' as any};
+
+    assert.throws(
+      () => engine.match(invalidOrder as Order),
+      { name: 'OrderValidationError', message: /side must be a valid enum value/ }
+    );
+  });
+
+  test('should throw validation error for non-positive quantity', () => {
+    const engine = new MatchingEngine();
+    const invalidOrder = {...validOrderBase, quantity: 0};
+
+    assert.throws(
+      () => engine.match(invalidOrder as Order),
+      { name: 'OrderValidationError', message: /quantity must be greater than or equal to 0\.00000001/ }
+    );
+  });
+
+  test('should throw validation error for missing price in limit order', () => {
+    const engine = new MatchingEngine();
+    const invalidOrder: LimitOrder = {
+      ...validOrderBase,
+      type: OrderType.LIMIT,
+      price: undefined as any
+    };
+
+    assert.throws(
+      () => engine.match(invalidOrder as Order),
+      { name: 'OrderValidationError', message: /price must be a positive number/
+      }
+    );
+  });
+
+  test('should throw validation error for non-positive price in limit order', () => {
+    const engine = new MatchingEngine();
+    const invalidOrder = {...validOrderBase, price: -10};
+
+    assert.throws(
+      () => engine.match(invalidOrder as Order),
+      { name: 'OrderValidationError', message: /price must be a positive number/ }
+    );
+  });
+
+  test('should not require price for market order', () => {
+    const engine = new MatchingEngine();
+    const validMarketOrder: MarketOrder = {
+      ...validOrderBase,
+      type: OrderType.MARKET,
+      price: undefined as any
+    };
+    
+    assert.doesNotThrow(() => engine.match(validMarketOrder));
+  });
 })

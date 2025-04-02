@@ -3,6 +3,13 @@ export enum OrderSide {
   BID, // buy
 }
 
+export enum OrderType {
+  LIMIT,
+  MARKET,
+  // STOP_LIMIT,
+  // ICEBERG,
+}
+
 export type BaseOrder = {
   id: string
   side: OrderSide
@@ -11,11 +18,12 @@ export type BaseOrder = {
 }
 
 export type MarketOrder = BaseOrder & {
-  type: 'market'
+  type: OrderType.MARKET
+  price?: never
 }
 
 export type LimitOrder = BaseOrder & {
-  type: 'limit'
+  type: OrderType.LIMIT
   price: number
 }
 

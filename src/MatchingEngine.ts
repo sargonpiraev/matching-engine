@@ -1,4 +1,8 @@
-import { LimitOrder, MarketOrder, Order, OrderSide, Trade } from './types'
+import { LimitOrder, MarketOrder, Order, OrderSide, OrderType, Trade } from './types'
+import { validateOrReject, validateSync } from 'class-validator';
+import { plainToInstance } from 'class-transformer';
+import { OrderDto } from './order.dto';
+import { OrderValidationError, TradingDisabledError } from './errors';
 
 // one trading instrument
 // no performance optimisations
@@ -6,16 +10,30 @@ import { LimitOrder, MarketOrder, Order, OrderSide, Trade } from './types'
 // trade gets bid price
 export class MatchingEngine {
   private orders: LimitOrder[] = []
+  private isTradingActive = true
 
-  public match(order: Order): Trade[] {
+  // Добавляем методы управления торговлей
+  stopTrading() {
+    this.isTradingActive = false
+  }
+
+  startTrading() {
+    this.isTradingActive = true
+  }
+
+  match(order: Order): Trade[] {
+    if (!this.isTradingActive) {
+      throw new TradingDisabledError()
+    }
+    this.validateOrder(order);
     const trades = this.matchOrderType(order);
-    if (order.type === 'market') return trades;
+    if (order.type === OrderType.MARKET) return trades;
     if (order.quantity) this.orders.push(order);
     return trades;
   }
 
   matchOrderType(order: Order): Trade[] {
-    return order.type === 'market'
+    return order.type === OrderType.MARKET
       ? this.matchMarketOrder(order)
       : this.matchLimitOrder(order)
   }
@@ -129,5 +147,14 @@ export class MatchingEngine {
   private updateQuantities(order: Order, existingOrder: Order, quantity: number) {
     order.quantity -= quantity
     this.reduceExistingOrderQuantity(existingOrder, quantity)
+  }
+
+  private validateOrder(order: Order) {
+    const orderDto = plainToInstance(OrderDto, order);
+    const errors = validateSync(orderDto);
+    if (errors.length > 0) {
+      const errorMessages = errors.flatMap(error => Object.values(error.constraints || {}));
+      throw new OrderValidationError(errorMessages.join('; '));
+    }
   }
 }
