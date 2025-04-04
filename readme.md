@@ -3,7 +3,7 @@ todo:
 - [x] partial order filling
 - [x] price-time algo
 - [x] market orders
-- [ ] validation
+- [x] validation
 - [ ] cancel order
 - [ ] performance optimisations
 - [ ] observability

@@ -13,29 +13,21 @@ export class MatchingEngine {
   private isTradingActive = true
 
   // Добавляем методы управления торговлей
-  stopTrading() {
+  public stopTrading() {
     this.isTradingActive = false
   }
 
-  startTrading() {
+  public startTrading() {
     this.isTradingActive = true
   }
 
-  match(order: Order): Trade[] {
-    if (!this.isTradingActive) {
-      throw new TradingDisabledError()
-    }
+  public match(order: Order): Trade[] {
+    if (!this.isTradingActive) throw new TradingDisabledError();
     this.validateOrder(order);
     const trades = this.matchOrderType(order);
     if (order.type === OrderType.MARKET) return trades;
     if (order.quantity) this.orders.push(order);
     return trades;
-  }
-
-  matchOrderType(order: Order): Trade[] {
-    return order.type === OrderType.MARKET
-      ? this.matchMarketOrder(order)
-      : this.matchLimitOrder(order)
   }
 
   public get bids() {
@@ -48,6 +40,13 @@ export class MatchingEngine {
     return this.orders
       .filter((order) => order.side === OrderSide.ASK)
       .sort((a, b) => a.price - b.price || a.time - b.time)
+  }
+
+
+  private matchOrderType(order: Order): Trade[] {
+    return order.type === OrderType.MARKET
+      ? this.matchMarketOrder(order)
+      : this.matchLimitOrder(order)
   }
 
   private deleteOrder(orderId: Order['id']) {
@@ -152,9 +151,9 @@ export class MatchingEngine {
   private validateOrder(order: Order) {
     const orderDto = plainToInstance(OrderDto, order);
     const errors = validateSync(orderDto);
-    if (errors.length > 0) {
-      const errorMessages = errors.flatMap(error => Object.values(error.constraints || {}));
-      throw new OrderValidationError(errorMessages.join('; '));
-    }
+    if (errors.length === 0) return;
+    const firstError = errors[0];
+    const firstErrorMessage = Object.values(firstError.constraints || {})[0];
+    throw new OrderValidationError(firstErrorMessage);
   }
 }
