@@ -12,7 +12,6 @@ export class MatchingEngine {
   private orders: LimitOrder[] = []
   private isTradingActive = true
 
-  // Добавляем методы управления торговлей
   public stopTrading() {
     this.isTradingActive = false
   }
