@@ -1,8 +1,8 @@
 import { LimitOrder, MarketOrder, Order, OrderSide, OrderType, Trade } from './types'
-import { validateOrReject, validateSync } from 'class-validator';
-import { plainToInstance } from 'class-transformer';
-import { OrderDto } from './order.dto';
-import { OrderValidationError, TradingDisabledError } from './errors';
+import { validateOrReject, validateSync } from 'class-validator'
+import { plainToInstance } from 'class-transformer'
+import { OrderDto } from './order.dto'
+import { OrderValidationError, TradingDisabledError } from './errors'
 
 // one trading instrument
 // no performance optimisations
@@ -21,12 +21,12 @@ export class MatchingEngine {
   }
 
   public match(order: Order): Trade[] {
-    if (!this.isTradingActive) throw new TradingDisabledError();
-    this.validateOrder(order);
-    const trades = this.matchOrderType(order);
-    if (order.type === OrderType.MARKET) return trades;
-    if (order.quantity) this.orders.push(order);
-    return trades;
+    if (!this.isTradingActive) throw new TradingDisabledError()
+    this.validateOrder(order)
+    const trades = this.matchOrderType(order)
+    if (order.type === OrderType.MARKET) return trades
+    if (order.quantity) this.orders.push(order)
+    return trades
   }
 
   public get bids() {
@@ -41,7 +41,6 @@ export class MatchingEngine {
       .sort((a, b) => a.price - b.price || a.time - b.time)
   }
 
-
   private matchOrderType(order: Order): Trade[] {
     return order.type === OrderType.MARKET
       ? this.matchMarketOrder(order)
@@ -53,15 +52,11 @@ export class MatchingEngine {
   }
 
   private matchMarketOrder(order: MarketOrder): Trade[] {
-    return order.side === OrderSide.BID
-      ? this.matchMarketBid(order)
-      : this.matchMarketAsk(order)
+    return order.side === OrderSide.BID ? this.matchMarketBid(order) : this.matchMarketAsk(order)
   }
 
   private matchLimitOrder(order: LimitOrder): Trade[] {
-    return order.side === OrderSide.BID
-      ? this.matchLimitBid(order)
-      : this.matchLimitAsk(order)
+    return order.side === OrderSide.BID ? this.matchLimitBid(order) : this.matchLimitAsk(order)
   }
 
   private reduceExistingOrderQuantity(order: Order, quantity: number) {
@@ -112,7 +107,7 @@ export class MatchingEngine {
       askOrderId: askOrder.id,
       price: askOrder.price,
       quantity: Math.min(bidOrder.quantity, askOrder.quantity),
-    };
+    }
   }
 
   private createLimitAskTrade(askOrder: LimitOrder, bidOrder: LimitOrder): Trade {
@@ -121,7 +116,7 @@ export class MatchingEngine {
       askOrderId: askOrder.id,
       price: bidOrder.price,
       quantity: Math.min(askOrder.quantity, bidOrder.quantity),
-    };
+    }
   }
 
   private createMarketBidTrade(bidOrder: MarketOrder, askOrder: LimitOrder): Trade {
@@ -130,7 +125,7 @@ export class MatchingEngine {
       askOrderId: askOrder.id,
       price: askOrder.price,
       quantity: Math.min(bidOrder.quantity, askOrder.quantity),
-    };
+    }
   }
 
   private createMarketAskTrade(askOrder: MarketOrder, bidOrder: LimitOrder): Trade {
@@ -139,7 +134,7 @@ export class MatchingEngine {
       askOrderId: askOrder.id,
       price: bidOrder.price,
       quantity: Math.min(askOrder.quantity, bidOrder.quantity),
-    };
+    }
   }
 
   private updateQuantities(order: Order, existingOrder: Order, quantity: number) {
@@ -148,11 +143,11 @@ export class MatchingEngine {
   }
 
   private validateOrder(order: Order) {
-    const orderDto = plainToInstance(OrderDto, order);
-    const errors = validateSync(orderDto);
-    if (errors.length === 0) return;
-    const firstError = errors[0];
-    const firstErrorMessage = Object.values(firstError.constraints || {})[0];
-    throw new OrderValidationError(firstErrorMessage);
+    const orderDto = plainToInstance(OrderDto, order)
+    const errors = validateSync(orderDto)
+    if (errors.length === 0) return
+    const firstError = errors[0]
+    const firstErrorMessage = Object.values(firstError.constraints || {})[0]
+    throw new OrderValidationError(firstErrorMessage)
   }
 }

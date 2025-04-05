@@ -784,7 +784,7 @@ describe('MarchingEngine Tests', () => {
     }
     matchingEngine.match(ask1)
     matchingEngine.match(ask2)
-        
+
     const marketBid: MarketOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -807,7 +807,7 @@ describe('MarchingEngine Tests', () => {
         askOrderId: ask2.id,
         price: ask2.price,
         quantity: 1,
-      }
+      },
     ]
     assert.deepEqual(result, expectedTrades)
     assert.strictEqual(matchingEngine.asks.length, 1)
@@ -844,7 +844,7 @@ describe('MatchingEngine Trading Status Tests', () => {
   test('should throw error when trading is disabled', () => {
     const engine = new MatchingEngine()
     engine.stopTrading()
-    
+
     const order: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -854,17 +854,14 @@ describe('MatchingEngine Trading Status Tests', () => {
       type: OrderType.LIMIT,
     }
 
-    assert.throws(
-      () => engine.match(order),
-      TradingDisabledError
-    )
+    assert.throws(() => engine.match(order), TradingDisabledError)
   })
 
   test('should allow trading after restart', () => {
     const engine = new MatchingEngine()
     engine.stopTrading()
     engine.startTrading()
-    
+
     const order: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -885,82 +882,81 @@ describe('Order Validation Tests', () => {
     quantity: 1,
     time: Date.now(),
     type: OrderType.LIMIT,
-    price: 100
-  };
+    price: 100,
+  }
 
   test('should throw validation error for missing id', () => {
-    const engine = new MatchingEngine();
-    const invalidOrder = {...validOrderBase, id: undefined as any} as Order;
+    const engine = new MatchingEngine()
+    const invalidOrder = { ...validOrderBase, id: undefined as any } as Order
 
-    assert.throws(
-      () => engine.match(invalidOrder),
-      { name: 'OrderValidationError', message: /id must be a UUID/ }
-    );
-  });
+    assert.throws(() => engine.match(invalidOrder), {
+      name: 'OrderValidationError',
+      message: /id must be a UUID/,
+    })
+  })
 
   test('should throw validation error for invalid UUID', () => {
-    const engine = new MatchingEngine();
-    const invalidOrder = {...validOrderBase, id: 'invalid-uuid'} as Order;
+    const engine = new MatchingEngine()
+    const invalidOrder = { ...validOrderBase, id: 'invalid-uuid' } as Order
 
-    assert.throws(
-      () => engine.match(invalidOrder),
-      { name: 'OrderValidationError', message: /id must be a UUID/ }
-    );
-  });
+    assert.throws(() => engine.match(invalidOrder), {
+      name: 'OrderValidationError',
+      message: /id must be a UUID/,
+    })
+  })
 
   test('should throw validation error for invalid side', () => {
-    const engine = new MatchingEngine();
-    const invalidOrder = {...validOrderBase, side: 'INVALID_SIDE' as any};
+    const engine = new MatchingEngine()
+    const invalidOrder = { ...validOrderBase, side: 'INVALID_SIDE' as any }
 
-    assert.throws(
-      () => engine.match(invalidOrder as Order),
-      { name: 'OrderValidationError', message: /side must be a valid enum value/ }
-    );
-  });
+    assert.throws(() => engine.match(invalidOrder as Order), {
+      name: 'OrderValidationError',
+      message: /side must be a valid enum value/,
+    })
+  })
 
   test('should throw validation error for non-positive quantity', () => {
-    const engine = new MatchingEngine();
-    const invalidOrder = {...validOrderBase, quantity: 0};
+    const engine = new MatchingEngine()
+    const invalidOrder = { ...validOrderBase, quantity: 0 }
 
-    assert.throws(
-      () => engine.match(invalidOrder as Order),
-      { name: 'OrderValidationError', message: /quantity must be greater than or equal to 0\.00000001/ }
-    );
-  });
+    assert.throws(() => engine.match(invalidOrder as Order), {
+      name: 'OrderValidationError',
+      message: /quantity must be greater than or equal to 0\.00000001/,
+    })
+  })
 
   test('should throw validation error for missing price in limit order', () => {
-    const engine = new MatchingEngine();
+    const engine = new MatchingEngine()
     const invalidOrder: LimitOrder = {
       ...validOrderBase,
       type: OrderType.LIMIT,
-      price: undefined as any
-    };
+      price: undefined as any,
+    }
 
-    assert.throws(
-      () => engine.match(invalidOrder as Order),
-      { name: 'OrderValidationError', message: /price must be a positive number/
-      }
-    );
-  });
+    assert.throws(() => engine.match(invalidOrder as Order), {
+      name: 'OrderValidationError',
+      message: /price must be a positive number/,
+    })
+  })
 
   test('should throw validation error for non-positive price in limit order', () => {
-    const engine = new MatchingEngine();
-    const invalidOrder = {...validOrderBase, price: -10};
+    const engine = new MatchingEngine()
+    const invalidOrder = { ...validOrderBase, price: -10 }
 
-    assert.throws(
-      () => engine.match(invalidOrder as Order),
-      { name: 'OrderValidationError', message: /price must be a positive number/ }
-    );
-  });
+    assert.throws(() => engine.match(invalidOrder as Order), {
+      name: 'OrderValidationError',
+      message: /price must be a positive number/,
+    })
+  })
 
   test('should not require price for market order', () => {
-    const engine = new MatchingEngine();
+    const engine = new MatchingEngine()
     const validMarketOrder: MarketOrder = {
       ...validOrderBase,
       type: OrderType.MARKET,
-      price: undefined as any
-    };
-    
-    assert.doesNotThrow(() => engine.match(validMarketOrder));
-  });
+      price: undefined as any,
+    }
+
+    assert.doesNotThrow(() => engine.match(validMarketOrder))
+  })
 })

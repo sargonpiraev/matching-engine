@@ -27,7 +27,7 @@ export type LimitOrder = BaseOrder & {
   price: number
 }
 
-export type Order = LimitOrder | MarketOrder;
+export type Order = LimitOrder | MarketOrder
 
 export type Trade = {
   askOrderId: string
