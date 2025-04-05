@@ -19,6 +19,7 @@ install:
     - npm ci --prefer-offline --cache .npm --no-audit --progress=false
   artifacts:
     paths: [ node_modules ]
+    expire_in: 1 day
   cache:
     policy: pull-push
 
@@ -28,7 +29,7 @@ test_unit:
     - npm run test:unit
   artifacts:
     paths: [ coverage ]
-    expire_in: 1 week
+    expire_in: 1 day
     reports:
       coverage_report:
         coverage_format: cobertura
@@ -45,7 +46,7 @@ test_build:
     - npm run build
   artifacts:
     paths: [ dist ]
-    expire_in: 1 week
+    expire_in: 1 day
 
 test_type:
   stage: test
