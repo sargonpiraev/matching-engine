@@ -35,6 +35,8 @@ test_unit:
       coverage_report:
         coverage_format: cobertura
         path: coverage/cobertura-coverage.xml
+      junit:
+        - junit.xml  
 
 test_codestyles:
   stage: test
