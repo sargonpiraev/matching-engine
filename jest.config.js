@@ -5,5 +5,6 @@ module.exports = {
   "collectCoverage": true,
   "collectCoverageFrom": ["src/**/*.ts", "!src/**/*.test.ts", "!src/main.ts"],
   "coverageDirectory": "coverage",
+  "reporters": ["default", "jest-junit"],
   "coverageReporters": ["clover", "json", "lcov", "text", "cobertura"]
 };
