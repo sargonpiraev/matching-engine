@@ -95,3 +95,44 @@ Comprehensive test suite covering:
 - Order book state management
 
 Run tests: `npm test:unit`
+
+## Potential Enhancements and Feature Roadmap
+
+### Advanced Order Types
+  - [ ] Stop-Loss orders
+  - [ ] Take-Profit orders
+  - [ ] Trailing Stop orders
+  - [ ] Iceberg orders (hidden quantity)
+  - [ ] Fill-or-Kill (FOK) execution
+
+### Order Management
+  - [ ] Order cancellation by ID
+  - [ ] Order modification support
+  - [ ] Time-in-Force (TTL) for orders
+  - [ ] Conditional orders (based on market triggers)
+
+### Performance Optimizations
+  - [ ] Binary heap implementation for price levels
+  - [ ] Order ID indexing for fast lookups
+  - [ ] Batch order processing
+  - [ ] Order book snapshot caching
+
+### Market Data & Analytics
+  - [ ] Real-time spread calculation
+  - [ ] Depth of Market (DOM) visualization
+  - [ ] Trade history persistence
+  - [ ] Volume-Weighted Average Price (VWAP)
+
+### System Integrations
+  - [ ] WebSocket API for real-time updates
+  - [ ] FIX protocol support
+  - [ ] Plugin architecture for extensions
+  - [ ] Market data simulator
+
+### Core Engine Improvements
+  - [ ] Multi-instrument support
+  - [ ] Auction mode implementation
+  - [ ] Backtesting framework
+  - [ ] Role-based access control
+  - [ ] Audit trail and event logging
+
