@@ -32,13 +32,21 @@ export class MatchingEngine {
   public get bids() {
     return this.orders
       .filter((order) => order.side === OrderSide.BID)
-      .sort((a, b) => b.price - a.price || a.time - b.time)
+      .sort(this.sortBidsByPriceTime)
   }
 
   public get asks() {
     return this.orders
       .filter((order) => order.side === OrderSide.ASK)
-      .sort((a, b) => a.price - b.price || a.time - b.time)
+      .sort(this.sortAsksByPriceTime)
+  }
+
+  private sortAsksByPriceTime(a: LimitOrder, b: LimitOrder) {
+    return a.price - b.price || a.time - b.time
+  }
+
+  private sortBidsByPriceTime(a: LimitOrder, b: LimitOrder) {
+    return b.price - a.price || a.time - b.time
   }
 
   private matchOrderType(order: Order): Trade[] {
@@ -68,7 +76,8 @@ export class MatchingEngine {
   private matchLimitBid(order: LimitOrder): Trade[] {
     if (order.quantity <= 0) return []
     const bestAsk = this.asks[0]
-    if (!bestAsk || order.price < bestAsk.price) return []
+    if (!bestAsk) return []
+    if (order.price < bestAsk.price) return []
     const trade = this.createLimitBidTrade(order, bestAsk)
     this.updateQuantities(order, bestAsk, trade.quantity)
     return [trade, ...this.matchLimitBid(order)]
@@ -77,7 +86,8 @@ export class MatchingEngine {
   private matchLimitAsk(order: LimitOrder): Trade[] {
     if (order.quantity <= 0) return []
     const bestBid = this.bids[0]
-    if (!bestBid || order.price > bestBid.price) return []
+    if (!bestBid) return []
+    if (order.price > bestBid.price) return []
     const trade = this.createLimitAskTrade(order, bestBid)
     this.updateQuantities(order, bestBid, trade.quantity)
     return [trade, ...this.matchLimitAsk(order)]
