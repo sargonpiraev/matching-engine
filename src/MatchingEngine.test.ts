@@ -1,7 +1,15 @@
 import assert from 'node:assert'
 import { MatchingEngine } from './MatchingEngine'
 import { randomUUID } from 'node:crypto'
-import { LimitOrder, OrderSide, Trade, MarketOrder, OrderType, Order } from './types'
+import {
+  LimitOrder,
+  OrderSide,
+  Trade,
+  MarketOrder,
+  OrderType,
+  Order,
+  MatchingAlgorithm,
+} from './types'
 import { TradingDisabledError } from './errors'
 
 describe('MarchingEngine Tests', () => {
@@ -15,7 +23,7 @@ describe('MarchingEngine Tests', () => {
       order should be added to orders
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const order: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -41,7 +49,7 @@ describe('MarchingEngine Tests', () => {
       order should be added to bids
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder1: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -76,7 +84,7 @@ describe('MarchingEngine Tests', () => {
       order should be added to asks
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const askOrder1: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -112,7 +120,7 @@ describe('MarchingEngine Tests', () => {
       new ask order should be added to orders
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -150,7 +158,7 @@ describe('MarchingEngine Tests', () => {
       no order should be in orders in the end
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -189,7 +197,7 @@ describe('MarchingEngine Tests', () => {
       no order should be in orders in the end
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -234,7 +242,7 @@ describe('MarchingEngine Tests', () => {
       bid order with less price should be in orders in the end
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrderMinPrice: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -290,7 +298,7 @@ describe('MarchingEngine Tests', () => {
       bid order created later should be in orders in the end
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrderOldest: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -344,7 +352,7 @@ describe('MarchingEngine Tests', () => {
       ask order with highest price should be in orders in the end
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const askOrderLowestPrice: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -400,7 +408,7 @@ describe('MarchingEngine Tests', () => {
       ask order created later should be in orders in the end
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const askOrderOldest: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -452,7 +460,7 @@ describe('MarchingEngine Tests', () => {
       remaining quantity of bid order should be 5
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -491,7 +499,7 @@ describe('MarchingEngine Tests', () => {
       remaining quantity of ask order should be 5
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const askOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -530,7 +538,7 @@ describe('MarchingEngine Tests', () => {
       remaining quantity of ask order should be 5
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -570,7 +578,7 @@ describe('MarchingEngine Tests', () => {
       second bid order should have remaining quantity 3
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder1: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -629,7 +637,7 @@ describe('MarchingEngine Tests', () => {
       second ask order should have remaining quantity 3
   `, () => {
     //assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const askOrder1: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -686,7 +694,7 @@ describe('MarchingEngine Tests', () => {
       ask order should be removed
   `, () => {
     // assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const askOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -726,7 +734,7 @@ describe('MarchingEngine Tests', () => {
       bid order should be removed
   `, () => {
     // assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const bidOrder: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -765,7 +773,7 @@ describe('MarchingEngine Tests', () => {
       should execute against best price first
   `, () => {
     // assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const ask1: LimitOrder = {
       id: randomUUID(),
       side: OrderSide.ASK,
@@ -823,7 +831,7 @@ describe('MarchingEngine Tests', () => {
       should not execute and not be added to book
   `, () => {
     // assign
-    const matchingEngine = new MatchingEngine()
+    const matchingEngine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const marketOrder: MarketOrder = {
       id: randomUUID(),
       side: OrderSide.BID,
@@ -842,7 +850,7 @@ describe('MarchingEngine Tests', () => {
 
 describe('MatchingEngine Trading Status Tests', () => {
   test('should throw error when trading is disabled', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     engine.stopTrading()
 
     const order: LimitOrder = {
@@ -858,7 +866,7 @@ describe('MatchingEngine Trading Status Tests', () => {
   })
 
   test('should allow trading after restart', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     engine.stopTrading()
     engine.startTrading()
 
@@ -886,7 +894,7 @@ describe('Order Validation Tests', () => {
   }
 
   test('should throw validation error for missing id', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const invalidOrder = { ...validOrderBase, id: undefined as any } as Order
 
     assert.throws(() => engine.match(invalidOrder), {
@@ -896,7 +904,7 @@ describe('Order Validation Tests', () => {
   })
 
   test('should throw validation error for invalid UUID', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const invalidOrder = { ...validOrderBase, id: 'invalid-uuid' } as Order
 
     assert.throws(() => engine.match(invalidOrder), {
@@ -906,7 +914,7 @@ describe('Order Validation Tests', () => {
   })
 
   test('should throw validation error for invalid side', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const invalidOrder = { ...validOrderBase, side: 'INVALID_SIDE' as any }
 
     assert.throws(() => engine.match(invalidOrder as Order), {
@@ -916,7 +924,7 @@ describe('Order Validation Tests', () => {
   })
 
   test('should throw validation error for non-positive quantity', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const invalidOrder = { ...validOrderBase, quantity: 0 }
 
     assert.throws(() => engine.match(invalidOrder as Order), {
@@ -926,7 +934,7 @@ describe('Order Validation Tests', () => {
   })
 
   test('should throw validation error for missing price in limit order', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const invalidOrder: LimitOrder = {
       ...validOrderBase,
       type: OrderType.LIMIT,
@@ -940,7 +948,7 @@ describe('Order Validation Tests', () => {
   })
 
   test('should throw validation error for non-positive price in limit order', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const invalidOrder = { ...validOrderBase, price: -10 }
 
     assert.throws(() => engine.match(invalidOrder as Order), {
@@ -950,7 +958,7 @@ describe('Order Validation Tests', () => {
   })
 
   test('should not require price for market order', () => {
-    const engine = new MatchingEngine()
+    const engine = new MatchingEngine(MatchingAlgorithm.PRICE_TIME)
     const validMarketOrder: MarketOrder = {
       ...validOrderBase,
       type: OrderType.MARKET,
@@ -960,3 +968,95 @@ describe('Order Validation Tests', () => {
     assert.doesNotThrow(() => engine.match(validMarketOrder))
   })
 })
+
+describe('Pro Rata Matching Algorithm', () => {
+  test(`
+    given
+      two ASK orders with same price and different quantities
+    when
+      new BID order added
+    then
+      should match larger quantity first
+  `, () => {
+    const engine = new MatchingEngine(MatchingAlgorithm.PRO_RATA)
+    const ask1 = createLimitAsk(100, 5) // quantity 5
+    const ask2 = createLimitAsk(100, 10) // quantity 10
+    const bid = createLimitBid(100, 15)
+
+    engine.match(ask1)
+    engine.match(ask2)
+    const trades = engine.match(bid)
+
+    assert.deepEqual(trades, [
+      { bidOrderId: bid.id, askOrderId: ask2.id, price: 100, quantity: 10 },
+      { bidOrderId: bid.id, askOrderId: ask1.id, price: 100, quantity: 5 },
+    ])
+  })
+
+  test(`
+    given
+      two BID orders with same price and different quantities
+    when
+      new ASK order added
+    then
+      should match larger quantity first
+  `, () => {
+    const engine = new MatchingEngine(MatchingAlgorithm.PRO_RATA)
+    const bid1 = createLimitBid(100, 3)
+    const bid2 = createLimitBid(100, 7)
+    const ask = createLimitAsk(100, 5)
+
+    engine.match(bid1)
+    engine.match(bid2)
+    const trades = engine.match(ask)
+
+    assert.deepEqual(trades, [{ bidOrderId: bid2.id, askOrderId: ask.id, price: 100, quantity: 5 }])
+    assert.strictEqual(bid2.quantity, 2)
+  })
+
+  test(`
+    given
+      orders with same price and quantity
+    when
+      matching happens
+    then
+      should prioritize earlier orders
+  `, () => {
+    const engine = new MatchingEngine(MatchingAlgorithm.PRO_RATA)
+    const ask1 = { ...createLimitAsk(100, 5), time: 1 }
+    const ask2 = { ...createLimitAsk(100, 5), time: 2 }
+    const bid = createLimitBid(100, 10)
+
+    engine.match(ask1)
+    engine.match(ask2)
+    const trades = engine.match(bid)
+
+    assert.deepEqual(trades, [
+      { bidOrderId: bid.id, askOrderId: ask1.id, price: 100, quantity: 5 },
+      { bidOrderId: bid.id, askOrderId: ask2.id, price: 100, quantity: 5 },
+    ])
+  })
+})
+
+// Хелпер-функции для создания ордеров
+function createLimitAsk(price: number, quantity: number): LimitOrder {
+  return {
+    id: randomUUID(),
+    side: OrderSide.ASK,
+    price,
+    quantity,
+    time: Date.now(),
+    type: OrderType.LIMIT,
+  }
+}
+
+function createLimitBid(price: number, quantity: number): LimitOrder {
+  return {
+    id: randomUUID(),
+    side: OrderSide.BID,
+    price,
+    quantity,
+    time: Date.now(),
+    type: OrderType.LIMIT,
+  }
+}

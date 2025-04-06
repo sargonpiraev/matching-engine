@@ -1,4 +1,12 @@
-import { LimitOrder, MarketOrder, Order, OrderSide, OrderType, Trade } from './types'
+import {
+  LimitOrder,
+  MarketOrder,
+  MatchingAlgorithm,
+  Order,
+  OrderSide,
+  OrderType,
+  Trade,
+} from './types'
 import { validateOrReject, validateSync } from 'class-validator'
 import { plainToInstance } from 'class-transformer'
 import { OrderDto } from './order.dto'
@@ -11,6 +19,16 @@ import { OrderValidationError, TradingDisabledError } from './errors'
 export class MatchingEngine {
   private orders: LimitOrder[] = []
   private isTradingActive = true
+  private sortBids: (a: LimitOrder, b: LimitOrder) => number
+  private sortAsks: (a: LimitOrder, b: LimitOrder) => number
+
+  constructor(private readonly algorithm: MatchingAlgorithm = MatchingAlgorithm.PRICE_TIME) {
+    this.sortBids =
+      algorithm === MatchingAlgorithm.PRICE_TIME ? this.sortBidsByPriceTime : this.sortBidsByProRata
+
+    this.sortAsks =
+      algorithm === MatchingAlgorithm.PRICE_TIME ? this.sortAsksByPriceTime : this.sortAsksByProRata
+  }
 
   public stopTrading() {
     this.isTradingActive = false
@@ -30,23 +48,11 @@ export class MatchingEngine {
   }
 
   public get bids() {
-    return this.orders
-      .filter((order) => order.side === OrderSide.BID)
-      .sort(this.sortBidsByPriceTime)
+    return this.orders.filter((order) => order.side === OrderSide.BID).sort(this.sortBids)
   }
 
   public get asks() {
-    return this.orders
-      .filter((order) => order.side === OrderSide.ASK)
-      .sort(this.sortAsksByPriceTime)
-  }
-
-  private sortAsksByPriceTime(a: LimitOrder, b: LimitOrder) {
-    return a.price - b.price || a.time - b.time
-  }
-
-  private sortBidsByPriceTime(a: LimitOrder, b: LimitOrder) {
-    return b.price - a.price || a.time - b.time
+    return this.orders.filter((order) => order.side === OrderSide.ASK).sort(this.sortAsks)
   }
 
   private matchOrderType(order: Order): Trade[] {
@@ -159,5 +165,21 @@ export class MatchingEngine {
     const firstError = errors[0]
     const firstErrorMessage = Object.values(firstError.constraints || {})[0]
     throw new OrderValidationError(firstErrorMessage)
+  }
+
+  private sortAsksByPriceTime(a: LimitOrder, b: LimitOrder) {
+    return a.price - b.price || a.time - b.time
+  }
+
+  private sortBidsByPriceTime(a: LimitOrder, b: LimitOrder) {
+    return b.price - a.price || a.time - b.time
+  }
+
+  private sortAsksByProRata(a: LimitOrder, b: LimitOrder) {
+    return a.price - b.price || b.quantity - a.quantity || a.time - b.time
+  }
+
+  private sortBidsByProRata(a: LimitOrder, b: LimitOrder) {
+    return b.price - a.price || b.quantity - a.quantity || a.time - b.time
   }
 }

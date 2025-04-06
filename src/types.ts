@@ -35,3 +35,8 @@ export type Trade = {
   price: number
   quantity: number
 }
+
+export enum MatchingAlgorithm {
+  PRICE_TIME,
+  PRO_RATA,
+}

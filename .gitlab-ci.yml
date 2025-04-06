@@ -3,7 +3,7 @@ image: node:22-alpine
 stages:
   - install
   - test
-  - dependabot
+  - publish
 
 variables:
   NODE_OPTIONS: "--max-old-space-size=4096"  # 4GB RAM limit
@@ -55,3 +55,13 @@ test_type:
   stage: test
   script:
     - npm run test:type
+
+publish:
+  stage: publish
+  only:
+    - tags
+  script:
+    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
+    - npm publish
+  dependencies:
+    - test_build
