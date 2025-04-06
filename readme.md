@@ -1,60 +1,55 @@
 # Matching Engine
 
-A simple yet robust order matching engine implementation for financial markets, supporting basic limit and market orders with price-time priority matching.
+A simple yet robust order matching engine implementation for financial markets, supporting limit/market orders with price-time and pro-rata matching algorithms.
 
 ## Key Features
 
-- **Order Types Supported**
+- **Supported Order Types**
   - Limit Orders
   - Market Orders
   - Immediate-or-Cancel (IOC) semantics for unfilled quantities
 
+- **Matching Algorithms**
+  - Price-Time Priority (default)
+  - Pro-Rata (proportional allocation)
+  - Configurable algorithm selection during engine initialization
+
 - **Matching Logic**
-  - Price-time priority execution
   - Bid/Ask sorting:
-    - Bids sorted descending by price (best bid first)
-    - Asks sorted ascending by price (best ask first)
-    - Time priority for same-priced orders
-  - Partial fills supported
-
-- **Order Book Management**
-  - Maintains separate bid/ask queues
-  - Automatic removal of filled orders
-  - Quantity reduction for partial fills
-
-- **Validation**
-  - Order validation using class-validator
-  - Rejects invalid orders with specific error messages
-  - Trading session control (start/stop trading)
-
-## Order Matching Rules
-
-### Limit Orders
-- Resting orders added to book if not immediately matchable
-- Bid matches when bid price ≥ best ask price
-- Ask matches when ask price ≤ best bid price
-- Matches at existing order's price (taker price)
-
-### Market Orders
-- Immediately matches against best available prices
-- Never added to order book
-- Bid matches against best ask
-- Ask matches against best bid
-
-### Execution Priorities
-1. Price priority
-2. Time priority (earlier orders first)
+    - **Price-Time**:
+      - Bids: Descending price → Ascending time
+      - Asks: Ascending price → Ascending time
+    - **Pro-Rata**:
+      - Bids: Descending price → Descending quantity → Ascending time
+      - Asks: Ascending price → Descending quantity → Ascending time
+  - Partial order fills supported
+  - Market orders never enter order book
 
 ## Example Usage
 
 ```typescript
-import { MatchingEngine, OrderSide, OrderType } from './MatchingEngine'
+import { MatchingEngine, MatchingAlgorithm, OrderSide, OrderType } from './MatchingEngine'
 
-const engine = new MatchingEngine()
+// Create engines with different algorithms
+const priceTimeEngine = new MatchingEngine() // default
+const proRataEngine = new MatchingEngine(MatchingAlgorithm.PRO_RATA)
 
-// Add limit order
+// Pro-Rata matching example
+const engine = new MatchingEngine(MatchingAlgorithm.PRO_RATA)
+
+// Add larger quantity order (later time)
 engine.match({
   id: '1',
+  price: 100,
+  side: OrderSide.BID,
+  quantity: 10,
+  time: Date.now() + 1,
+  type: OrderType.LIMIT
+})
+
+// Add smaller quantity order (earlier time)
+engine.match({
+  id: '2',
   price: 100,
   side: OrderSide.BID,
   quantity: 5,
@@ -62,23 +57,38 @@ engine.match({
   type: OrderType.LIMIT
 })
 
-// Add market order
+// Matching ask order
 const trades = engine.match({
-  id: '2',
+  id: '3',
+  price: 100,
   side: OrderSide.ASK,
-  quantity: 3,
+  quantity: 8,
   time: Date.now(),
-  type: OrderType.MARKET
+  type: OrderType.LIMIT
 })
+
+// Execution order: Larger quantity (10) first, then smaller (5)
+// Trades: [{bidOrderId: '1', quantity: 8}, ...]
 ```
 
+## Execution Priorities
+
+### Price-Time (Default)
+1. Price priority
+2. Time priority (earlier orders first)
+
+### Pro-Rata
+1. Price priority
+2. Quantity priority (larger orders first)
+3. Time priority (earlier orders first)
+
 ## Current Limitations
-- Single instrument only
+- Single instrument support only
+- No hybrid matching algorithms
+- No minimum volume thresholds for pro-rata
+- No order execution visualization
 - No advanced order types (stop orders, etc.)
-- No persisted order book
-- No performance optimizations
-- No spread calculation helpers
-- No market data feeds
+- No performance optimizations for large order books
 
 ## Error Handling
 The engine throws specific errors for:
