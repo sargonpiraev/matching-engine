@@ -64,7 +64,7 @@ build:
 
 release:
   stage: release
-    dependencies: [ install, build ]
+  dependencies: [ install, build ]
   script:
     - npx semantic-release
   rules:
