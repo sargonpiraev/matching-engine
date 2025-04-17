@@ -12,12 +12,15 @@
     "test:codestyles": "prettier src --check",
     "test:codestyles:fix": "prettier src --write",
     "build": "tsc",
-    "prepare": "husky"
+    "prepare": "husky",
+    "commitlint": "commitlint --edit"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
     "@semantic-release/gitlab": "^13.2.4",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.13.11",
