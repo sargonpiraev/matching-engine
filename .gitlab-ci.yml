@@ -3,7 +3,8 @@ image: node:22-alpine
 stages:
   - install
   - test
-  - publish
+  - build
+  - release
 
 variables:
   NODE_OPTIONS: "--max-old-space-size=4096"  # 4GB RAM limit
@@ -47,21 +48,25 @@ test_build:
   stage: test
   script:
     - npm run build
-  artifacts:
-    paths: [ dist ]
-    expire_in: 1 day
 
 test_type:
   stage: test
   script:
     - npm run test:type
 
-publish:
-  stage: publish
-  only:
-    - tags
+build:
+  stage: build
   script:
-    - echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
-    - npm publish
-  dependencies:
-    - test_build
+    - npm run build
+  artifacts:
+    paths: [ dist ]
+    expire_in: 1 day 
+
+release:
+  stage: release
+    dependencies: [ install, build ]
+  script:
+    - npx semantic-release
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
