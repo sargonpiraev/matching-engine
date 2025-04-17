@@ -54,6 +54,12 @@ test_type:
   script:
     - npm run test:type
 
+test_vulnerabilities:
+  stage: test
+  script:
+    - npm audit
+    
+
 build:
   stage: build
   script:
