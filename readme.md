@@ -2,33 +2,22 @@
 
 A simple yet robust order matching engine implementation for financial markets, supporting limit/market orders with price-time and pro-rata matching algorithms.
 
-## Key Features
+## Installation
 
-- **Supported Order Types**
-  - Limit Orders
-  - Market Orders
-  - Immediate-or-Cancel (IOC) semantics for unfilled quantities
-
-- **Matching Algorithms**
-  - Price-Time Priority (default)
-  - Pro-Rata (proportional allocation)
-  - Configurable algorithm selection during engine initialization
-
-- **Matching Logic**
-  - Bid/Ask sorting:
-    - **Price-Time**:
-      - Bids: Descending price → Ascending time
-      - Asks: Ascending price → Ascending time
-    - **Pro-Rata**:
-      - Bids: Descending price → Descending quantity → Ascending time
-      - Asks: Ascending price → Descending quantity → Ascending time
-  - Partial order fills supported
-  - Market orders never enter order book
+```bash
+npm install node-matching-engine
+```
 
 ## Example Usage
 
 ```typescript
-import { MatchingEngine, MatchingAlgorithm, OrderSide, OrderType } from './MatchingEngine'
+import { 
+  MatchingEngine, 
+  MatchingAlgorithm, 
+  OrderSide, 
+  OrderType 
+} from 'node-matching-engine'
+
 
 // Create engines with different algorithms
 const priceTimeEngine = new MatchingEngine() // default
@@ -70,6 +59,30 @@ const trades = engine.match({
 // Execution order: Larger quantity (10) first, then smaller (5)
 // Trades: [{bidOrderId: '1', quantity: 8}, ...]
 ```
+
+## Key Features
+
+- **Supported Order Types**
+  - Limit Orders
+  - Market Orders
+  - Immediate-or-Cancel (IOC) semantics for unfilled quantities
+
+- **Matching Algorithms**
+  - Price-Time Priority (default)
+  - Pro-Rata (proportional allocation)
+  - Configurable algorithm selection during engine initialization
+
+- **Matching Logic**
+  - Bid/Ask sorting:
+    - **Price-Time**:
+      - Bids: Descending price → Ascending time
+      - Asks: Ascending price → Ascending time
+    - **Pro-Rata**:
+      - Bids: Descending price → Descending quantity → Ascending time
+      - Asks: Ascending price → Descending quantity → Ascending time
+  - Partial order fills supported
+  - Market orders never enter order book
+
 
 ## Execution Priorities
 

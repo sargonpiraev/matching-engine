@@ -1,34 +1,16 @@
 {
   "compilerOptions": {
-    // Исходные файлы
     "rootDir": "src",
-    // Выходная директория
     "outDir": "dist",
-
-    // Treat files as modules even if it doesn't use import/export
     "moduleDetection": "force",
-
-    // Ignore module structure
     "module": "Preserve",
-
-    // Allow JSON modules to be imported
     "resolveJsonModule": true,
-
-    // Allow JS files to be imported from TS and vice versa
     "allowJs": true,
-
-    // Use correct ESM import behavior
     "esModuleInterop": true,
-
-    // Disallow features that require cross-file awareness
     "isolatedModules": true,
-
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
   },
-
-  // Включить все файлы в src
   "include": ["src/**/*"],
-  // Исключить node_modules по умолчанию + тесты
   "exclude": ["node_modules", "src/**/*.test.ts"]
 }
