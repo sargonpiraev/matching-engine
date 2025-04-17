@@ -63,6 +63,7 @@ build:
     expire_in: 1 day 
 
 release:
+  image: node:22
   stage: release
   dependencies: [ install, build ]
   script:
